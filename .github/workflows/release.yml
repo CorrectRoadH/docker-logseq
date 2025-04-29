@@ -1,8 +1,8 @@
 name: build-and-push
 on:
-    push:
-      tags:
-        - v*.*.*
+  push:
+    tags:
+      - v*.*.*
 
 jobs:
   build-and-push-release-image:
@@ -39,27 +39,28 @@ jobs:
         with:
           install: true
           version: v0.9.1
-  
+          platforms: linux/amd64,linux/arm64 # Add the target platforms here
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-            images: |
-                correctroad/logseq
-            tags: |
-                type=raw,value=${{ env.VERSION }}
-            flavor: |
-                latest=true
-            labels: |
-                org.opencontainers.image.version=${{ env.VERSION }}
-  
-      - name: Build and Push
+          images: |
+            correctroad/logseq
+          tags: |
+            type=raw,value=${{ env.VERSION }}
+          flavor: |
+            latest=true
+          labels: |
+            org.opencontainers.image.version=${{ env.VERSION }}
+
+      - name: Build and Push Multi-Platform Image
         id: docker_build
         uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./dockerfile
-          platforms: linux/amd64
+          platforms: ${{ steps.buildx.outputs.platforms }} # Use the platforms defined in buildx setup
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
