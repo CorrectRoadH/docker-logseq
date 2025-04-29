@@ -39,7 +39,7 @@ jobs:
         with:
           install: true
           version: v0.9.1
-          platforms: linux/amd64,linux/arm64 # Add the target platforms here
+          platforms: linux/amd64,linux/arm64
 
       - name: Docker meta
         id: meta
@@ -60,7 +60,7 @@ jobs:
         with:
           context: ./
           file: ./dockerfile
-          platforms: ${{ steps.buildx.outputs.platforms }} # Use the platforms defined in buildx setup
+          platforms: ${{ steps.buildx.outputs.platforms }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
