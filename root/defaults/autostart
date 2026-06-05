@@ -1,1 +1,18 @@
+#!/bin/sh
+# Ensure the graph directory exists. Logseq will populate pages/, journals/,
+# logseq/config.edn etc. itself on first load — we do not pre-create those.
+mkdir -p /config/logseq-graph
+
+# Register the graph with Logseq's graph registry by ensuring the transit cache
+# file exists. The file name encodes the path:
+#   /config/logseq-graph  →  logseq_local_++config++logseq-graph.transit
+# An empty file is valid: Logseq treats it as an uncached graph and loads the
+# directory from disk, calling create-default-files! to initialise it.
+# On subsequent starts the file is populated and Logseq restores from it.
+mkdir -p /config/.logseq/graphs
+TRANSIT_FILE=/config/.logseq/graphs/logseq_local_++config++logseq-graph.transit
+if [ ! -f "$TRANSIT_FILE" ]; then
+  touch "$TRANSIT_FILE"
+fi
+
 /usr/local/bin/Logseq --no-sandbox
