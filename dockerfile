@@ -6,34 +6,39 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # 安装必要的包
 RUN apt-get update && \
-    apt-get install -y wget python3-xdg curl
-
-RUN apt-get install -y \
-apt-utils \
-ca-certificates \
-fonts-noto-cjk \
-fonts-noto-cjk-extra
-
-RUN apt-get install -y \
-# 音频相关
-libasound2t64 \
-# GTK 相关
-libatk1.0-0 \
-libatk-bridge2.0-0 \
-libcups2 \
-libdrm2 \
-libgtk-3-0 \
-libgbm1 \
-# X11 相关
-libxcomposite1 \
-libxdamage1 \
-libxfixes3 \
-libxrandr2 \
-libxshmfence1 \
-libx11-xcb1 \
-libxcursor1 \
-libxi6 \
-libxtst6
+    apt-get install -y \
+        # packaging support
+        wget \
+        python3-xdg \
+        curl \
+        apt-utils \
+        ca-certificates \
+        fonts-noto-cjk \
+        fonts-noto-cjk-extra \
+        # 音频相关
+        libasound2t64 \
+        # GTK 相关
+        libatk1.0-0 \
+        libatk-bridge2.0-0 \
+        libcups2 \
+        libdrm2 \
+        libgtk-3-0 \
+        libgbm1 \
+        # X11 相关
+        libxcomposite1 \
+        libxdamage1 \
+        libxfixes3 \
+        libxrandr2 \
+        libxshmfence1 \
+        libx11-xcb1 \
+        libxcursor1 \
+        libxi6 \
+        libxtst6 \
+        && \
+        # 清理缓存
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/* && \
+        :
 
 # Fetch latest Logseq release dynamically at build time
 RUN LOGSEQ_VERSION=$(curl -s https://api.github.com/repos/logseq/logseq/releases/latest | \
@@ -80,10 +85,6 @@ window.addEventListener('DOMContentLoaded', function () {
   })
 })
 PATCH
-
-# 清理缓存
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
 COPY /root /
 
